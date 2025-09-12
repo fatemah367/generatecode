@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Professional QR Code Generator</title>
+  <title data-translate="generator_title">Generate Your QR Code</title>
+  <script src="js/translations.js"></script>
+  <script src="js/translate.js"></script>
   <style>
+    /* Your existing CSS from provided index.html */
     body {
       margin: 0;
       padding: 0;
@@ -87,62 +90,51 @@
       height: auto !important;
     }
     @media (max-width: 600px) {
-      .form-wrapper {
-        padding: 20px;
-      }
-      .form-wrapper h1 {
-        font-size: 1.5rem;
-      }
+      .form-wrapper { padding: 20px; }
+      .form-wrapper h1 { font-size: 1.5rem; }
     }
   </style>
 </head>
 <body>
-
   <div class="form-wrapper">
-    <h1>Generate Your QR Code</h1>
-    <input type="text" id="qrInput" class="qr-input" placeholder="Enter text or URL here...">
-    <button class="qr-btn" onclick="generateQR()">Generate QR</button>
-    <button id="downloadBtn" class="download-btn" onclick="downloadQR()">Download QR</button>
-    <button id="newBtn" class="qr-btn" style="display:none;" onclick="resetQR()">Generate New</button>
-    <button class="qr-btn" onclick="window.location.href='generated.html'">View Generated History 📜</button>
+    <h1 data-translate="generator_title">Generate Your QR Code</h1>
+    <input type="text" id="qrInput" class="qr-input" placeholder="Enter text or URL here..." data-translate-placeholder="generator_input_placeholder">
+    <button class="qr-btn" data-translate="generator_button" onclick="generateQR()">Generate QR</button>
+    <button id="downloadBtn" class="download-btn" data-translate="generator_download_button" onclick="downloadQR()">Download QR</button>
+    <button id="newBtn" class="qr-btn" style="display:none;" data-translate="generator_new_button" onclick="resetQR()">Generate New</button>
+    <button class="qr-btn" data-translate="generator_history_button" onclick="window.location.href='generated.html'">View Generated History 📜</button>
+    <button class="qr-btn" data-translate="settings_title" onclick="window.location.href='https://username.github.io/settings-repo/'">⚙️ Settings</button>
     <div class="qr-output" id="qrOutput">
-      <p style="color:#888;">Your QR code will appear here</p>
+      <p style="color:#888;" data-translate="generator_output_default">Your QR code will appear here</p>
     </div>
   </div>
-
-  <!-- ✅ QR Code Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
     let qr;
-
+    const lang = localStorage.getItem('selectedLanguage') || 'en';
     function saveGenerated(qrText) {
       const canvas = document.querySelector("#qrOutput canvas");
       if (!canvas) return;
-
-      const qrImageData = canvas.toDataURL("image/png"); // save as base64
-
+      const qrImageData = canvas.toDataURL("image/png");
       let history = JSON.parse(localStorage.getItem('generatedHistory')) || [];
       history.unshift({
         text: qrText,
         image: qrImageData,
         date: new Date().toLocaleString()
       });
-
       localStorage.setItem('generatedHistory', JSON.stringify(history));
     }
-
     function generateQR() {
       const qrOutput = document.getElementById("qrOutput");
       qrOutput.innerHTML = "";
       const input = document.getElementById("qrInput").value.trim();
-
       if (!input) {
-        qrOutput.innerHTML = "<p style='color:red;'>⚠️ Please enter something!</p>";
+        qrOutput.innerHTML = `<p style='color:red;' data-translate="generator_empty_input">${translations[lang].generator_empty_input}</p>`;
         document.getElementById("downloadBtn").style.display = "none";
         document.getElementById("newBtn").style.display = "none";
+        applyTranslation(lang);
         return;
       }
-
       qr = new QRCode(qrOutput, {
         text: input,
         width: 200,
@@ -151,14 +143,10 @@
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
       });
-
-      // ✅ Save to history
       saveGenerated(input);
-
       document.getElementById("downloadBtn").style.display = "block";
-      document.getElementById("newBtn").style.display = "block"; 
+      document.getElementById("newBtn").style.display = "block";
     }
-
     function downloadQR() {
       const canvas = document.querySelector("#qrOutput canvas");
       if (canvas) {
@@ -168,13 +156,13 @@
         link.click();
       }
     }
-
     function resetQR() {
       document.getElementById("qrInput").value = "";
       const qrOutput = document.getElementById("qrOutput");
-      qrOutput.innerHTML = "<p style='color:#888;'>Your QR code will appear here</p>";
+      qrOutput.innerHTML = `<p style="color:#888;" data-translate="generator_output_default">${translations[lang].generator_output_default}</p>`;
       document.getElementById("downloadBtn").style.display = "none";
       document.getElementById("newBtn").style.display = "none";
+      applyTranslation(lang);
     }
   </script>
 </body>
