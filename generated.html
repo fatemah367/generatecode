@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-translate="generated_title">Generated QR History</title>
-  <script src="js/translations.js"></script>
-  <script src="js/translate.js"></script>
+  <title>Generated QR History</title>
   <style>
     body {
       margin: 0;
@@ -91,24 +89,25 @@
 </head>
 <body>
   <div class="form-wrapper">
-    <h1 data-translate="generated_title">Generated QR History</h1>
-    <button class="qr-btn" data-translate="generated_clear_button" onclick="clearHistory()">🗑️ Clear All History</button>
-<button class="qr-btn" data-translate="generated_scanner_button" onclick="window.location.href='./index.html'">📷 Go to Scanner</button>
-    <button class="qr-btn" data-translate="settings_title" onclick="window.location.href='https://username.github.io/settings-repo/'">⚙️ Settings</button>
+    <h1>Generated QR History</h1>
+    <button class="qr-btn" onclick="clearHistory()">🗑 Clear All History</button>
+    <!-- ✅ fixed: now points to generate.html -->
+    <button class="qr-btn" onclick="window.location.href='generate.html'">⬅ Back to Generator</button>
     <div class="history-list" id="historyList">
-      <p style="color:#888;" data-translate="generated_empty">No generated QR codes yet.</p>
+      <p style="color:#888;">No generated QR codes yet.</p>
     </div>
   </div>
+
   <script>
     function loadHistory() {
       const history = JSON.parse(localStorage.getItem('generatedHistory')) || [];
       const historyList = document.getElementById("historyList");
-      const lang = localStorage.getItem('selectedLanguage') || 'en';
+
       if (history.length === 0) {
-        historyList.innerHTML = `<p style='color:#888;' data-translate="generated_empty">${translations[lang].generated_empty}</p>`;
-        applyTranslation(lang);
+        historyList.innerHTML = "<p style='color:#888;'>No generated QR codes yet.</p>";
         return;
       }
+
       historyList.innerHTML = "";
       history.forEach(item => {
         const div = document.createElement("div");
@@ -122,12 +121,13 @@
         `;
         historyList.appendChild(div);
       });
-      applyTranslation(lang);
     }
+
     function clearHistory() {
       localStorage.removeItem('generatedHistory');
       loadHistory();
     }
+
     loadHistory();
   </script>
 </body>
